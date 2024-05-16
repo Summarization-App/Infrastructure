@@ -1,0 +1,3 @@
+[submodule "Helm_Chart"]
+	path = Helm_Chart
+	url = https://github.com/Summarization-App/Helm_Chart
