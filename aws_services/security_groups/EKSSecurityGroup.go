@@ -1,12 +1,12 @@
 package securitygroups
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/vpc"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-func Security_Group_EKS(ctx *pulumi.Context, inputVpc *ec2.Vpc) (*ec2.SecurityGroup, error)  {
+func Security_Group_EKS(ctx *pulumi.Context, inputVpc *ec2.Vpc) (*ec2.SecurityGroup, error) {
 
 	allowTls, err := ec2.NewSecurityGroup(ctx, "allow_tls", &ec2.SecurityGroupArgs{
 		Name:        pulumi.String("allow_tls"),
@@ -46,5 +46,5 @@ func Security_Group_EKS(ctx *pulumi.Context, inputVpc *ec2.Vpc) (*ec2.SecurityGr
 	})
 
 	return allowTls, err
-	
+
 }
