@@ -2,7 +2,7 @@ package main
 
 import (
 	eks "infrastructure/aws_services/eks"
-	securitygroups "infrastructure/aws_services/security_groups"
+	iam "infrastructure/aws_services/iam"
 	"infrastructure/aws_services/subnets"
 	vpc "infrastructure/aws_services/vpc"
 
@@ -32,23 +32,23 @@ func main() {
 
 		subnets, errors := subnets.CreateSubnets(ctx, cfg, vpc)
 
-		if errors[0] != nil{
+		if errors[0] != nil {
 			return errors[0]
 		}
 
-		securityGroup, error := securitygroups.Security_Group_EKS(ctx, vpc)
+		// securityGroup, error := securitygroups.Security_Group_EKS(ctx, vpc)
 
-		if error != nil {
-			return error
-		}
-
-		// eksRole, err := iam.EKSRole(ctx)
-
-		// if err != nil{
-		// 	return err
+		// if error != nil {
+		// 	return error
 		// }
 
-		// eks_fargate, err := iam.CreateFargateRole(ctx)
+		eksRole, err := iam.EKSRole(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		eks_fargate, err := iam.CreateFargateRole(ctx)
 
 		// ec2NodeRole, err := iam.CreateEC2Role(ctx)
 
@@ -58,20 +58,18 @@ func main() {
 
 		// eks_cluster, err := eks.CreateEKSCluster(ctx, vpc, subnets, eksRole, ec2NodeRole)
 
-		// eks_cluster, err := eks.CreateEKSCluster(ctx, vpc, subnets, eksRole, eks_fargate)
-		eks_cluster, err := eks.CreateEKSCluster2(ctx, vpc, subnets, securityGroup)
-		
+		eks_cluster, err := eks.CreateEKSCluster(ctx, vpc, subnets, eksRole, eks_fargate)
+		// eks_cluster, err := eks.CreateEKSCluster2(ctx, vpc, subnets, securityGroup)
+
 		if err != nil {
 			return err
 		}
 
 		ctx.Export("vpc name", vpc.ID())
 		ctx.Export("First Subnet", subnets[0].ID())
-		ctx.Export("EKS Name", eks_cluster.Core.Cluster())
+		ctx.Export("EKS Name", eks_cluster.Arn)
 
-		
 		return nil
-
 
 	})
 }

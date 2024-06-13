@@ -1,8 +1,8 @@
 package eks
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/eks"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/eks"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -20,8 +20,7 @@ func CreateEKSCluster(ctx *pulumi.Context, vpc *ec2.Vpc, subnets []*ec2.Subnet, 
 				subnets[2].ID(),
 			},
 			EndpointPublicAccess: pulumi.Bool(true),
-		},		
-		
+		},
 	})
 
 	// eks.NewNodeGroup(ctx, "Node_Group", &eks.NodeGroupArgs{
@@ -40,12 +39,12 @@ func CreateEKSCluster(ctx *pulumi.Context, vpc *ec2.Vpc, subnets []*ec2.Subnet, 
 	// 	},
 	// 	InstanceTypes: pulumi.StringArray{
 	// 		pulumi.String("t2.medium"),
-	// 	},	
+	// 	},
 	// })
 
 	eks.NewFargateProfile(ctx, "FargateProfile", &eks.FargateProfileArgs{
-		ClusterName: cluster.Name,
-		FargateProfileName: pulumi.String("Fargate_Profile_Pulumi"),
+		ClusterName:         cluster.Name,
+		FargateProfileName:  pulumi.String("Fargate_Profile_Pulumi"),
 		PodExecutionRoleArn: ec2NodeRole.Arn,
 		SubnetIds: pulumi.StringArray{
 			subnets[0].ID(),
@@ -62,8 +61,6 @@ func CreateEKSCluster(ctx *pulumi.Context, vpc *ec2.Vpc, subnets []*ec2.Subnet, 
 	// eksProvider, err := kubernetes.NewProvider(ctx, "eks-provider", &kubernetes.ProviderArgs{
 	// 	Kubeconfig: cluster.GetKube,
 	// })
-
-
 
 	// opts := &helm.v3.ChartOptions{
 	// 	Chart:   "path/to/helm/chart", // Path to submodule
@@ -92,7 +89,6 @@ func CreateEKSCluster(ctx *pulumi.Context, vpc *ec2.Vpc, subnets []*ec2.Subnet, 
 	// 	},
 
 	// })
-
 
 	return cluster, err
 
